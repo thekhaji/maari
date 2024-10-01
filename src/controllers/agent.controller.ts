@@ -16,12 +16,35 @@ agentController.goHome = (req: Request, res: Response) => {
     }
 }
 
+agentController.getSignup = (req: Request, res: Response) => {
+    try {
+        console.log("getSignup");
+        res.send("Signup Page");
+    } catch (err) {
+        console.log("Error, getSignup:", err);
+    }
+}
+
 agentController.getLogin = (req: Request, res: Response) => {
     try {
         console.log("getLogin");
         res.send("Login Page");
     } catch (err) {
         console.log("Error, getLogin:", err);
+    }
+}
+
+agentController.processSignup = async (req: Request, res: Response) => {
+    try {
+        console.log("processSignup");
+        console.log("body:", req.body);
+        const newMember: MemberInput = req.body;
+        newMember.memberType = MemberType.AGENT;
+        const result = await memberService.processSignup(newMember);
+        res.send(result);
+    } catch (err) {
+        console.log("Error, processSignup:", err);
+        res.send(err);
     }
 }
 
@@ -39,27 +62,8 @@ agentController.processLogin = async (req: Request, res: Response) => {
     }
 }
 
-agentController.getSignup = (req: Request, res: Response) => {
-    try {
-        console.log("getSignup");
-        res.send("Signup Page");
-    } catch (err) {
-        console.log("Error, getSignup:", err);
-    }
-}
 
-agentController.processSignup = async (req: Request, res: Response) => {
-    try {
-        console.log("processSignup");
-        console.log("body:", req.body);
-        const newMember: MemberInput = req.body;
-        newMember.memberType = MemberType.AGENT;
-        const result = await memberService.processSignup(newMember);
-        res.send(result);
-    } catch (err) {
-        console.log("Error, processSignup:", err);
-        res.send(err);
-    }
-}
+
+
 
 export default agentController;
