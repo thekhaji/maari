@@ -46,7 +46,7 @@ agentController.processSignup = async (req: AdminRequest, res: Response) => {
             throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_RONG);  
 
         const newMember: MemberInput = req.body;
-        newMember.memberImage = file?.path;
+        newMember.memberImage = file?.path.replace(/\\/g, "/");;
         newMember.memberType = MemberType.AGENT;
         const result = await memberService.processSignup(newMember);
 
@@ -57,7 +57,7 @@ agentController.processSignup = async (req: AdminRequest, res: Response) => {
     } catch (err) {
         console.log("Error, processSignup:", err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_RONG;
-        res.send(`<script> alert("${message}"); window.location.replace('admin/signup)</script>`);
+        res.send(`<script> alert("${message}"); window.location.replace('admin/signup')</script>`);
     }
 }
 
@@ -75,7 +75,7 @@ agentController.processLogin = async (req: AdminRequest, res: Response) => {
     } catch (err) {
         console.log("Error, processLogin:", err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_RONG;
-        res.send(`<script> alert("${message}"); window.location.replace('admin/login)</script>`);
+        res.send(`<script> alert("${message}"); window.location.replace('admin/login')</script>`);
     }
 }
 
@@ -111,7 +111,7 @@ agentController.verifyAgent = (req: AdminRequest, res: Response, next: NextFunct
     }
     else {
         const message = Message.NOT_AUTHENTICATED;
-        res.send(`<script> alert("${message}"); window.location.replace('admin/login)</script>`);
+        res.send(`<script> alert("${message}"); window.location.replace('admin/login')</script>`);
     }
 }
 
