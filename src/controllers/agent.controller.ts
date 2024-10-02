@@ -1,5 +1,5 @@
 import { T } from "../libs/types/common";
-import {Response, Request} from "express";
+import {Response, Request, NextFunction} from "express";
 import MemberService from "../models/Member.service";
 import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
@@ -100,6 +100,16 @@ agentController.checkAuthSession = async(req: AdminRequest, res: Response) => {
     }
 }
 
+agentController.verifyAgent = (req: AdminRequest, res: Response, next: NextFunction) =>{
+    if(req.session?.member?.memberType === MemberType.AGENT){
+        req.member = req.session.member;
+        next();
+    }
+    else {
+        const message = Message.NOT_AUTHENTICATED;
+        res.send(`<script> alert("${message}"); window.location.replace('admin/login)</script>`);
+    }
+}
 
 
 export default agentController;

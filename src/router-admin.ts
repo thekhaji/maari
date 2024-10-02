@@ -16,10 +16,10 @@ routerAdmin.get("/logout", agentController.logout)
 routerAdmin.get("/checkAuthSession", agentController.checkAuthSession)
 
 /** Product **/
-routerAdmin.get("/product/all", productController.getAllProducts);
-routerAdmin.post("/product/create", productController.createNewProduct);
-routerAdmin.post("/product/update", productController.updateChosenProduct);
+routerAdmin.get("/product/all", agentController.verifyAgent, productController.getAllProducts);
+routerAdmin.post("/product/create", agentController.verifyAgent, productController.createNewProduct);
+routerAdmin.post("/product/:id", agentController.verifyAgent, productController.updateChosenProduct);
 
 /** User **/
 
-export default routerAdmin;
+export default routerAdmin; 
