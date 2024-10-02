@@ -3,7 +3,7 @@ import {Response, Request, NextFunction} from "express";
 import MemberService from "../models/Member.service";
 import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
-import Errors, { Message } from "../libs/Errors";
+import Errors, { HttpCode, Message } from "../libs/Errors";
 
 const agentController: T = {};
 const memberService = new MemberService();
@@ -41,14 +41,18 @@ agentController.getLogin = (req: Request, res: Response) => {
 agentController.processSignup = async (req: AdminRequest, res: Response) => {
     try {
         console.log("processSignup");
-        console.log("body:", req.body);
+        const file = req.file;
+        if(!file)
+            throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_RONG);  
+
         const newMember: MemberInput = req.body;
+        newMember.memberImage = file?.path;
         newMember.memberType = MemberType.AGENT;
         const result = await memberService.processSignup(newMember);
 
         req.session.member = result;
         req.session.save(()=>{
-            res.send(result);
+            res.redirect("/admin/product/all");
         });
     } catch (err) {
         console.log("Error, processSignup:", err);
@@ -60,13 +64,13 @@ agentController.processSignup = async (req: AdminRequest, res: Response) => {
 agentController.processLogin = async (req: AdminRequest, res: Response) => {
     try {
         console.log("processLogin");
-        console.log("body:", req.body);
+        
         const input: LoginInput = req.body;
         const result = await memberService.processLogin(input);
 
         req.session.member = result;
         req.session.save(()=>{
-            res.send(result);
+            res.redirect("/admin/product/all");
         });
     } catch (err) {
         console.log("Error, processLogin:", err);
