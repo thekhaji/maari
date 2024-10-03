@@ -2,6 +2,7 @@ import MemberModel from "../schema/Member.model";
 import { LoginInput, Member, MemberInput } from "../libs/types/member";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import * as bcrypt from "bcryptjs";
+import { MemberType } from "../libs/enums/member.enum";
 
 class MemberService{
     private readonly memberModel;
@@ -67,6 +68,13 @@ class MemberService{
             throw new Errors(HttpCode.UNATHORIZED, Message.WRONG_PASSWORD);
 
         return  await this.memberModel.findById(member._id).exec();
+    }
+
+    public async getUsers(): Promise<Member[]>{
+        const result = await this.memberModel.find({memberType: MemberType.USER}).exec();
+        if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+        return result;
     }
 }
 

@@ -22,5 +22,6 @@ routerAdmin.post("/product/create", agentController.verifyAgent, makeUploader("p
 routerAdmin.post("/product/:id", agentController.verifyAgent, productController.updateChosenProduct);
 
 /** User **/
+routerAdmin.get("/user/all", agentController.verifyAgent, agentController.getUsers)
 
 export default routerAdmin; 
