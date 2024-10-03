@@ -23,5 +23,5 @@ routerAdmin.post("/product/:id", agentController.verifyAgent, productController.
 
 /** User **/
 routerAdmin.get("/user/all", agentController.verifyAgent, agentController.getUsers)
-
+routerAdmin.post("/user/edit", agentController.verifyAgent, agentController.updateChosenUser)
 export default routerAdmin; 
