@@ -57,7 +57,7 @@ agentController.processSignup = async (req: AdminRequest, res: Response) => {
     } catch (err) {
         console.log("Error, processSignup:", err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_RONG;
-        res.send(`<script> alert("${message}"); window.location.replace('admin/signup')</script>`);
+        res.send(`<script> alert("${message}"); window.location.replace('/admin/signup')</script>`);
     }
 }
 
@@ -75,7 +75,7 @@ agentController.processLogin = async (req: AdminRequest, res: Response) => {
     } catch (err) {
         console.log("Error, processLogin:", err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_RONG;
-        res.send(`<script> alert("${message}"); window.location.replace('admin/login')</script>`);
+        res.send(`<script> alert("${message}"); window.location.replace('/admin/login')</script>`);
     }
 }
 
