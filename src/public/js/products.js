@@ -9,6 +9,24 @@ $(function(){
         $(".dish-container").slideToggle(100);
         $("#process-btn").css("display", "flex");
     });
+
+    $(".new-product-status").on("change", async function(e){
+        const id = e.target.id;
+        const productStatus = $(`#${id}.new-product-status`).val();
+
+        try{
+            const response = await axios.post(`/admin/product/${id}`, {productStatus: productStatus}) ;
+            console.log("response:", response);
+            const result = response.data;
+            if(result.data){
+                $(".new-product-status").blur();
+            }else  alert("Prodcut update failed!");
+        }
+        catch(err){
+            console.log(err);
+            alert("Prodcut update failed!");
+        }
+    });
 })
 
 
