@@ -3,12 +3,40 @@ import {Response, Request} from "express";
 import { T } from "../libs/types/common";
 import { Message } from "../libs/Errors";
 import { AdminRequest } from "../libs/types/member";
-import { ProductInput } from "../libs/types/product";
+import { ProductInput, ProductInquiry, ProductUpdateInput } from "../libs/types/product";
 import ProductService from "../models/Product.service";
+import { ProductCollection } from "../libs/enums/product.enum";
 
 const productController: T = {};
 const productService = new ProductService();
 
+/** SPA **/
+productController.getProducts = async (req: Request, res: Response) => {
+    try {
+        console.log("getProducts");
+        const {order, page, limit, productCollection, search} = req.query;
+        const inquiry: ProductInquiry = {
+            order: String(order),
+            page: Number(page), 
+            limit: Number(limit),
+        };
+        if(productCollection)
+            inquiry.productCollection = productCollection as ProductCollection;
+
+        if(search)
+            inquiry.search = String(search);
+        
+        const result = await productService.getProducts(inquiry);
+
+        res.status(HttpCode.OK).json(result);
+    } catch (err) {
+        console.log("Error, getProducts:", err);
+        const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_RONG;
+        res.send(`<script> alert("${message}"); window.location.replace('/admin/login')</script>`);
+    }
+}
+
+/** SSR **/
 productController.getAllProducts = async (req: Request, res: Response) => {
     try {
         console.log("getAllProducts");
