@@ -9,7 +9,7 @@ export interface Member{
     memberStatus: MemberStatus;
     memberNick: string;
     memberPhone: string;
-    memberPassword?: string;
+    memberPassword: string;
     memberAddress?: string;
     memberDesc?: string;
     memberImage?: string;
@@ -54,6 +54,7 @@ export interface AdminRequest extends Request{
     file: Express.Multer.File;
     files: Express.Multer.File[];
 }
+
 
 export interface ExtendedRequest extends Request{
     member: Member;
