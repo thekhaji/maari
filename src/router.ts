@@ -4,7 +4,9 @@ import memberController from "./controllers/member.controller";
 const router = express.Router();
 
 
-router.post("/login", memberController.login);
-router.post("/signup", memberController.signup);
+router.post("/member/login", memberController.login);
+router.post("/member/signup", memberController.signup);
+router.post("/member/logout", memberController.verifyAuth, memberController.logout);
+router.get("/member/verifyAuth", memberController.verifyAuth);
 
 export default router;
