@@ -3,15 +3,19 @@ import { T } from "../libs/types/common";
 import {Response, Request} from "express";
 import { LoginInput, Member, MemberInput } from "../libs/types/member";
 import Errors from "../libs/Errors";
+import AuthService from "../models/Auth.service";
+import { token } from "morgan";
 
 const memberController: T = {};
 const memberService = new MemberService();
+const authService = new AuthService();
 
 memberController.signup = async (req: Request, res: Response) => {
     try {
         console.log("signup");
         const newMember: MemberInput = req.body,
-         result: Member = await memberService.signup(newMember);
+         result: Member = await memberService.signup(newMember),
+         token = await authService.createToken(result);
 
         res.json({member: result});
     } catch (err) {
@@ -25,7 +29,10 @@ memberController.login = async (req: Request, res: Response) => {
     try {
         console.log("login");
         const input: LoginInput = req.body,
-         result = await memberService.login(input);
+        result = await memberService.login(input),
+        token = await authService.createToken(result);
+
+        
 
         res.json({member: result});
     } catch (err) {
