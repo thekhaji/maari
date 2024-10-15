@@ -2,7 +2,7 @@ import Errors, { HttpCode } from "../libs/Errors";
 import {Response, Request} from "express";
 import { T } from "../libs/types/common";
 import { Message } from "../libs/Errors";
-import { AdminRequest } from "../libs/types/member";
+import { AdminRequest, ExtendedRequest } from "../libs/types/member";
 import { ProductInput, ProductInquiry, ProductUpdateInput } from "../libs/types/product";
 import ProductService from "../models/Product.service";
 import { ProductCollection } from "../libs/enums/product.enum";
@@ -33,6 +33,23 @@ productController.getProducts = async (req: Request, res: Response) => {
         console.log("Error, getProducts:", err);
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_RONG;
         res.send(`<script> alert("${message}"); window.location.replace('/admin/login')</script>`);
+    }
+}
+
+productController.getProduct = async(req: ExtendedRequest, res: Response) => {
+    try {
+        console.log("getProduct");
+        
+        const {id} = req.params;
+        const memberId = req.member?._id ?? null,
+            result = await productService.getProduct(memberId, id);
+        
+        res.status(HttpCode.OK).json(result);
+
+    } catch (err) {                        
+        console.log("Error,getProduct:", err);
+        if (err instanceof Errors) res.status(err.code).json();
+        else res.status(Errors.standard.code).json(Errors.standard);
     }
 }
 

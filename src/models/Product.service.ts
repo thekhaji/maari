@@ -6,6 +6,7 @@ import { Message } from "../libs/Errors";
 import { shapeIntoMongooseObject } from "../libs/config";
 import { ProductStatus } from "../libs/enums/product.enum";
 import { T } from "../libs/types/common";
+import {ObjectId} from "mongoose";
 
 class ProductService{
     private readonly productModel;
@@ -33,6 +34,38 @@ class ProductService{
 
         if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
         
+        return result;
+    }
+
+    public async getProduct(memberId: ObjectId | null, id: string): Promise<Product>{
+        const productId = shapeIntoMongooseObject(id);
+
+        let result = await this.productModel.findOne({_id: productId, productStatus: ProductStatus.PROCESS}).exec();
+
+        if(!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+        // if (memberId){
+        //     //Check view log existence
+        //     const input: ViewInput = {
+        //         memberId: memberId,
+        //         viewRefId: productId,
+        //         viewGroup: ViewGroup.PRODUCT, 
+        //     };
+        //     const existView = await this.viewService.checkViewExistence(input);
+
+            
+        //     if(!existView){
+        //         //Insert New View
+        //         console.log("PLANNING TO INSERT NEW VIEW");
+        //         await this.viewService.insertMemberView(input);
+            
+        //         //Increase Counts
+        //         const result2 = await this.productModel.findByIdAndUpdate(productId, {$inc: {productViews: + 1}}, {new: true}).exec();
+        //     }
+
+            
+        // }
+
         return result;
     }
 
