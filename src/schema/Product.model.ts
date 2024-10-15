@@ -43,6 +43,10 @@ const productModel = new Schema({
         type: Number,
         default: 0,
     },
+    productDiscount: {
+        type: Number,
+        default: 0,
+    },
 
 },
 { timestamps: true }
