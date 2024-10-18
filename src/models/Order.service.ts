@@ -93,6 +93,25 @@ class OrderService{
         return result;
     }
 
+    public async updateOrder(member: Member, input: OrderUpdateInput): Promise<Order>{
+        const memberId = shapeIntoMongooseObject(member._id);
+        const orderId = shapeIntoMongooseObject(input.orderId);
+        const orderStatus = input.orderStatus;
+
+        const result = await this.orderModel.findByIdAndUpdate(
+            {memberId: memberId, _id: orderId},
+            {orderStatus: orderStatus},
+            {new: true},
+        ).exec();
+
+        if(!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+
+        if(orderStatus === OrderStatus.PROCESS)
+            await this.memberService.addUserPoint(member, 1);
+
+        return result;
+    }
+
     
 }
 
